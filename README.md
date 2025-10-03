@@ -1,8 +1,8 @@
-# bdwgc-alloc
+# bdwgc-rust
 
-[![GitHub Action](https://img.shields.io/github/actions/workflow/status/raviqqe/bdwgc-alloc/test.yaml?branch=main&style=flat-square)](https://github.com/raviqqe/bdwgc-alloc/actions)
+[![GitHub Action](https://img.shields.io/github/actions/workflow/status/bdwgc/bdwgc-rust/test.yaml?branch=main&style=flat-square)](https://github.com/bdwgc/bdwgc-rust/actions)
 [![Crate](https://img.shields.io/crates/v/bdwgc-alloc.svg?style=flat-square)](https://crates.io/crates/bdwgc-alloc)
-[![License](https://img.shields.io/github/license/raviqqe/bdwgc-alloc.svg?style=flat-square)](LICENSE)
+[![License](https://img.shields.io/github/license/bdwgc/bdwgc-rust.svg?style=flat-square)](LICENSE)
 
 [`GlobalAlloc`](https://doc.rust-lang.org/std/alloc/trait.GlobalAlloc.html) implementation for [`bdwgc`][bdwgc], the conservative garbage collector.
 
@@ -22,4 +22,4 @@ cargo build --no-default-features --features cmake
 
 [MIT](LICENSE)
 
-[bdwgc]: https://github.com/ivmai/bdwgc
+[bdwgc]: https://github.com/bdwgc/bdwgc
