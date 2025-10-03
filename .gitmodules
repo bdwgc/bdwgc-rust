@@ -1,6 +1,6 @@
 [submodule "vendor/bdwgc"]
 	path = vendor/bdwgc
-	url = https://github.com/ivmai/bdwgc
+	url = https://github.com/bdwgc/bdwgc
 [submodule "vendor/libatomic_ops"]
 	path = vendor/libatomic_ops
-	url = https://github.com/ivmai/libatomic_ops
+	url = https://github.com/bdwgc/libatomic_ops
