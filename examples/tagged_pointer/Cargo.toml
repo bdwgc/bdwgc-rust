@@ -1,0 +1,9 @@
+[package]
+name = "tagged_pointer"
+version = "0.1.0"
+authors = ["Yota Toyama <raviqqe@gmail.com>"]
+edition = "2021"
+publish = false
+
+[dependencies]
+bdwgc-alloc = { path = "../.." }
