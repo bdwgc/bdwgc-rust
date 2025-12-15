@@ -13,7 +13,7 @@ dependencies = [
 
 [[package]]
 name = "bdwgc-alloc"
-version = "0.6.12"
+version = "0.6.13"
 dependencies = [
  "autotools",
  "cmake",

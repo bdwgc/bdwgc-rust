@@ -1,6 +1,6 @@
 [package]
 name = "bdwgc-alloc"
-version = "0.6.12"
+version = "0.6.13"
 edition = "2024"
 description = "impl GlobalAlloc for bdwgc"
 repository = "https://github.com/raviqqe/bdwgc-alloc"
