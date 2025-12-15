@@ -9,6 +9,6 @@ fn main() {
     let mut _n: Box<[u8; 2 ^ 8]> = Box::new([0; 2 ^ 8]);
 
     loop {
-        *_n = [0; 2 ^ 8];
+        _n = Box::new([0; 2 ^ 8]);
     }
 }
