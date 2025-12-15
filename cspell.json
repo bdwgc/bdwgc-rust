@@ -5,6 +5,7 @@
     "bdwgc",
     "canonicalize",
     "cflag",
+    "clippy",
     "dealloc",
     "finalizer",
     "gcollect",
