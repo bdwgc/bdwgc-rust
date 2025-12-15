@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           submodules: true
-      - uses: Swatinem/rust-cache@v2
+      - uses: swatinem/rust-cache@v2
       - run: cargo build
   test:
     runs-on: ubuntu-latest
@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v6
         with:
           submodules: true
-      - uses: Swatinem/rust-cache@v2
+      - uses: swatinem/rust-cache@v2
       - run: cargo test
   examples:
     runs-on: ubuntu-latest
@@ -27,13 +27,13 @@ jobs:
       - uses: actions/checkout@v6
         with:
           submodules: true
-      - uses: Swatinem/rust-cache@v2
-      - run: examples/test.sh
+      - uses: swatinem/rust-cache@v2
+      - run: tools/example_test.sh
   cmake:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
         with:
           submodules: true
-      - uses: Swatinem/rust-cache@v2
+      - uses: swatinem/rust-cache@v2
       - run: cargo build --no-default-features --features cmake
