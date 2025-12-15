@@ -1,4 +1,4 @@
-use std::{
+use core::{
     error,
     fmt::{self, Display, Formatter},
 };
@@ -9,7 +9,7 @@ pub struct Error {
 }
 
 impl Error {
-    pub fn new(description: &'static str) -> Error {
+    pub const fn new(description: &'static str) -> Error {
         Error { description }
     }
 }

@@ -15,3 +15,10 @@ cmake = { version = "0.1.55", optional = true }
 
 [features]
 default = ["autotools"]
+
+[lints.clippy]
+alloc_instead_of_core = "deny"
+dbg_macro = "deny"
+missing_const_for_fn = "deny"
+std_instead_of_alloc = "deny"
+std_instead_of_core = "deny"

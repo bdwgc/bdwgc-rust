@@ -4,7 +4,7 @@ extern crate alloc;
 
 mod error;
 
-use alloc::alloc::{GlobalAlloc, Layout};
+use core::alloc::{GlobalAlloc, Layout};
 use core::ptr::null;
 use libc::{c_int, c_void, size_t};
 
