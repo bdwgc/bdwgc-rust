@@ -9,7 +9,7 @@ categories = ["api-bindings", "memory-management", "no-std", "no-std::no-alloc"]
 
 [workspace]
 resolver = "3"
-members = ["examples/*/*"]
+members = ["examples/*"]
 
 [dependencies]
 libc = "0.2.178"
