@@ -5,7 +5,7 @@ edition = "2024"
 description = "impl GlobalAlloc for bdwgc"
 repository = "https://github.com/raviqqe/bdwgc-alloc"
 license = "MIT"
-categories = ["no-std", "no-std::no-alloc"]
+categories = ["api-bindings", "memory-management", "no-std", "no-std::no-alloc"]
 
 [dependencies]
 libc = "0.2.178"
