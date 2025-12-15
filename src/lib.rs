@@ -1,6 +1,5 @@
 #![doc = include_str!("../README.md")]
-
-extern crate alloc;
+#![no_std]
 
 mod error;
 
