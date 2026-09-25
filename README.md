@@ -2,7 +2,7 @@
 
 [![GitHub Action](https://img.shields.io/github/actions/workflow/status/bdwgc/bdwgc-rust/test.yaml?branch=main&style=flat-square)](https://github.com/bdwgc/bdwgc-rust/actions)
 [![Crate](https://img.shields.io/crates/v/bdwgc-alloc.svg?style=flat-square)](https://crates.io/crates/bdwgc-alloc)
-[![License](https://img.shields.io/github/license/bdwgc/bdwgc-rust.svg?style=flat-square)](LICENSE)
+[![License](https://img.shields.io/github/license/bdwgc/bdwgc-rust.svg?style=flat-square)](https://github.com/bdwgc/bdwgc-rust/blob/main/LICENSE)
 
 [`GlobalAlloc`](https://doc.rust-lang.org/std/alloc/trait.GlobalAlloc.html) implementation for [`bdwgc`][bdwgc], the conservative garbage collector.
 
@@ -10,7 +10,7 @@ This crate is for use cases in which developers need to integrate [`bdwgc`][bdwg
 
 ## Usage
 
-See [`examples`](examples) directory.
+See [`examples`](https://github.com/bdwgc/bdwgc-rust/tree/main/examples) directory.
 
 By default [`bdwgc`][bdwgc] is built with autotools. To build with cmake, enable the `cmake` feature:
 
@@ -20,6 +20,6 @@ cargo build --no-default-features --features cmake
 
 ## License
 
-[MIT](LICENSE)
+[MIT](https://github.com/bdwgc/bdwgc-rust/blob/main/LICENSE)
 
 [bdwgc]: https://github.com/bdwgc/bdwgc
