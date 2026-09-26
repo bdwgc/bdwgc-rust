@@ -6,7 +6,6 @@ default-members = ["bdwgc-alloc", "bdwgc-alloc-sys"]
 [workspace.package]
 version = "0.6.15"
 edition = "2024"
-readme = "README.md"
 repository = "https://github.com/bdwgc/bdwgc-rust"
 license = "MIT"
 

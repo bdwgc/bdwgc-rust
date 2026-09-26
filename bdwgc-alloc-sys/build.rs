@@ -14,9 +14,6 @@ fn main() {
         .clang_arg("-DGC_THREADS")
         .use_core()
         .allowlist_item("GC_.*")
-        // The wrappers of thread creation are for redirecting calls to C libraries and
-        // drag platform-specific types into the bindings.
-        .blocklist_function("GC_(pthread_.*|dlopen|CreateThread|ExitThread|beginthreadex|endthreadex)")
         .default_macro_constant_type(bindgen::MacroTypeVariation::Signed)
         .generate()
         .unwrap()

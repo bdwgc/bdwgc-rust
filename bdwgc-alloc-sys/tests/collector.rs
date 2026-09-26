@@ -63,7 +63,9 @@ fn finalize() {
 
 fn register_thread() {
     thread::spawn(|| {
-        let mut base = GC_stack_base { mem_base: null_mut() };
+        let mut base = GC_stack_base {
+            mem_base: null_mut(),
+        };
 
         assert_eq!(unsafe { GC_get_stack_base(&mut base) }, GC_SUCCESS);
         assert_eq!(unsafe { GC_register_my_thread(&base) }, GC_SUCCESS);
