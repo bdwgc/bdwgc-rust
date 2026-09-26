@@ -40,6 +40,7 @@ unsafe extern "C" {
     ) -> *mut c_void;
 }
 
+/// An allocator.
 pub struct Allocator;
 
 impl Allocator {
