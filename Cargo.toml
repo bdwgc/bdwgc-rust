@@ -1,7 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["bdwgc-alloc", "bdwgc-alloc-sys", "examples/*"]
-default-members = ["bdwgc-alloc", "bdwgc-alloc-sys"]
+members = ["bdwgc-alloc", "bdwgc-alloc-sys"]
 
 [workspace.package]
 version = "0.6.15"
