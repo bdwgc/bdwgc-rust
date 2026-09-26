@@ -13,7 +13,7 @@ use core::{
     ptr::null_mut,
     sync::atomic::{AtomicUsize, Ordering},
 };
-use std::thread;
+use std::thread::spawn;
 
 static FINALIZED_COUNT: AtomicUsize = AtomicUsize::new(0);
 
@@ -63,7 +63,7 @@ fn finalize() {
 }
 
 fn register_thread() {
-    thread::spawn(|| {
+    spawn(|| {
         let mut base = GC_stack_base {
             mem_base: null_mut(),
         };
