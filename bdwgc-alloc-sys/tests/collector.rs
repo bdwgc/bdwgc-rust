@@ -58,6 +58,7 @@ fn finalize() {
 
     unsafe { GC_gcollect() };
 
+    // TODO Is there any way to collect all?
     assert!(FINALIZED_COUNT.load(Ordering::Relaxed) > 0);
 }
 
