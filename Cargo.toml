@@ -1,34 +1,21 @@
-[package]
-name = "bdwgc-alloc"
-version = "0.6.15"
-edition = "2024"
-description = "impl GlobalAlloc for bdwgc"
-documentation = "https://bdwgc.github.io/bdwgc-rust/bdwgc_alloc/"
-repository = "https://github.com/raviqqe/bdwgc-alloc"
-license = "MIT"
-categories = ["api-bindings", "memory-management", "no-std", "no-std::no-alloc"]
-
 [workspace]
 resolver = "3"
-members = ["examples/*"]
+members = ["bdwgc-alloc", "bdwgc-alloc-sys", "examples/*"]
+default-members = ["bdwgc-alloc", "bdwgc-alloc-sys"]
 
-[dependencies]
-libc = "0.2.186"
+[workspace.package]
+version = "0.6.15"
+edition = "2024"
+repository = "https://github.com/bdwgc/bdwgc-rust"
+license = "MIT"
 
-[build-dependencies]
-autotools = { version = "0.2.7", optional = true }
-cmake = { version = "0.1.58", optional = true }
-
-[features]
-default = ["autotools"]
-
-[lints.clippy]
+[workspace.lints.clippy]
 alloc_instead_of_core = "deny"
 dbg_macro = "deny"
 missing_const_for_fn = "deny"
 std_instead_of_alloc = "deny"
 std_instead_of_core = "deny"
 
-[lints.rust]
+[workspace.lints.rust]
 missing_docs = "deny"
 warnings = "deny"

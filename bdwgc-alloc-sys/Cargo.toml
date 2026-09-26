@@ -1,0 +1,25 @@
+[package]
+name = "bdwgc-alloc-sys"
+version.workspace = true
+edition.workspace = true
+description = "Rust bindings to the bdwgc C API"
+documentation = "https://bdwgc.github.io/bdwgc-rust/bdwgc_alloc_sys/"
+repository.workspace = true
+license.workspace = true
+categories = ["external-ffi-bindings", "memory-management", "no-std", "no-std::no-alloc"]
+links = "gc"
+
+[build-dependencies]
+autotools = { version = "0.2.7", optional = true }
+bindgen = "0.73.2"
+cmake = { version = "0.1.58", optional = true }
+
+[features]
+default = ["autotools"]
+
+[lints]
+workspace = true
+
+[[test]]
+name = "collector"
+harness = false

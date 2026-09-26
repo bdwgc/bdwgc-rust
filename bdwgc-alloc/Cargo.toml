@@ -1,0 +1,20 @@
+[package]
+name = "bdwgc-alloc"
+version.workspace = true
+edition.workspace = true
+description = "impl GlobalAlloc for bdwgc"
+documentation = "https://bdwgc.github.io/bdwgc-rust/bdwgc_alloc/"
+repository.workspace = true
+license.workspace = true
+categories = ["api-bindings", "memory-management", "no-std", "no-std::no-alloc"]
+
+[dependencies]
+bdwgc-alloc-sys = { version = "0.6.15", path = "../bdwgc-alloc-sys", default-features = false }
+
+[features]
+default = ["autotools"]
+autotools = ["bdwgc-alloc-sys/autotools"]
+cmake = ["bdwgc-alloc-sys/cmake"]
+
+[lints]
+workspace = true
