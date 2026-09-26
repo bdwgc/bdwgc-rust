@@ -1,11 +1,32 @@
 //! A build script.
 
+use std::{env, path::PathBuf};
+
 const LIB_ATOMIC_OPS_DIR: &str = "vendor/libatomic_ops";
 const LIB_GC_DIR: &str = "vendor/bdwgc";
 
+fn main() {
+    build_library();
+
+    bindgen::builder()
+        .header(format!("{LIB_GC_DIR}/include/gc.h"))
+        .clang_arg(format!("-I{LIB_GC_DIR}/include"))
+        .clang_arg("-DGC_THREADS")
+        .use_core()
+        .allowlist_item("GC_.*")
+        // The wrappers of thread creation are for redirecting calls to C libraries and
+        // drag platform-specific types into the bindings.
+        .blocklist_function("GC_(pthread_.*|dlopen|CreateThread|ExitThread|beginthreadex|endthreadex)")
+        .default_macro_constant_type(bindgen::MacroTypeVariation::Signed)
+        .generate()
+        .unwrap()
+        .write_to_file(PathBuf::from(env::var("OUT_DIR").unwrap()).join("bindings.rs"))
+        .unwrap();
+}
+
 cfg_select! {
     feature = "cmake" => {
-        fn main() {
+        fn build_library() {
             use cmake::Config;
             use std::path::Path;
 
@@ -31,7 +52,7 @@ cfg_select! {
         }
     }
     feature = "autotools" => {
-        fn main() {
+        fn build_library() {
             for dir in &[LIB_ATOMIC_OPS_DIR, LIB_GC_DIR] {
                 std::process::Command::new("sh")
                     .arg("-c")
