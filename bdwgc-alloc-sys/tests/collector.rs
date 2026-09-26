@@ -1,7 +1,4 @@
 //! A smoke test of the bindings.
-//!
-//! The test runs without the test harness because a collector must be
-//! initialized in a main thread.
 
 use bdwgc_alloc_sys::{
     GC_SUCCESS, GC_allow_register_threads, GC_free, GC_gcollect, GC_get_stack_base, GC_init,
@@ -43,7 +40,6 @@ fn finalize() {
         FINALIZED_COUNT.fetch_add(1, Ordering::Relaxed);
     }
 
-    // A conservative collector might keep some of the objects alive but not all of them.
     for _ in 0..1000 {
         unsafe {
             GC_register_finalizer(
