@@ -28,13 +28,16 @@ jobs:
           - ubuntu-latest
           - ubuntu-26.04-arm
           - macos-latest
+        options:
+          -
+          - --no-default-features --features cmake
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: true
       - uses: ./.github/actions/setup
-      - run: cargo test
+      - run: cargo test ${{ matrix.options }}
   examples:
     strategy:
       fail-fast: false
@@ -50,36 +53,10 @@ jobs:
           submodules: true
       - uses: ./.github/actions/setup
       - run: tools/example_test.sh
-  cmake:
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - ubuntu-latest
-          - ubuntu-26.04-arm
-          - macos-latest
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          submodules: true
-      - uses: ./.github/actions/setup
-      - run: cargo build --no-default-features --features cmake
   test:
     needs:
       - build
       - unit_test
-      - examples
-      - cmake
-    if: always()
-    runs-on: ubuntu-latest
-    steps:
-      - run: for result in ${{ join(needs.*.result, ' ') }}; do [ $result = success ]; done
-  test:
-    needs:
-      - build
-      - autotools
-      - cmake
       - examples
     if: always()
     runs-on: ubuntu-latest
