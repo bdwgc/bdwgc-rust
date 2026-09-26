@@ -107,31 +107,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "dynamic_threads"
-version = "0.1.0"
-dependencies = [
- "bdwgc-alloc",
-]
-
-[[package]]
 name = "find-msvc-tools"
 version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3a3076410a55c90011c298b04d0cfa770b00fa04e1e3c97d3f6c9de105a03844"
-
-[[package]]
-name = "free_by_borrow"
-version = "0.1.0"
-dependencies = [
- "bdwgc-alloc",
-]
-
-[[package]]
-name = "free_by_gc"
-version = "0.1.0"
-dependencies = [
- "bdwgc-alloc",
-]
 
 [[package]]
 name = "glob"
@@ -257,13 +236,6 @@ name = "shlex"
 version = "2.0.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f8fadd59c855ef2080decdef8ff161eb6661b86933c9d82e5ba29dc602a55aba"
-
-[[package]]
-name = "static_threads"
-version = "0.1.0"
-dependencies = [
- "bdwgc-alloc",
-]
 
 [[package]]
 name = "syn"
