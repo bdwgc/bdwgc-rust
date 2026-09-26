@@ -3,8 +3,10 @@
 
 mod error;
 
-use core::alloc::{GlobalAlloc, Layout};
-use core::ptr::null;
+use core::{
+    alloc::{GlobalAlloc, Layout},
+    ptr::null,
+};
 use libc::{c_int, c_void, size_t};
 
 const GC_SUCCESS: c_int = 0;
@@ -38,6 +40,7 @@ unsafe extern "C" {
     ) -> *mut c_void;
 }
 
+/// An allocator.
 pub struct Allocator;
 
 impl Allocator {
