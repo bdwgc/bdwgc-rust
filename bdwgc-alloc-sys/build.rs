@@ -1,12 +1,13 @@
 //! A build script.
 
+use core::error::Error;
 use std::{env, path::PathBuf};
 
 const LIB_ATOMIC_OPS_DIR: &str = "vendor/libatomic_ops";
 const LIB_GC_DIR: &str = "vendor/bdwgc";
 
-fn main() {
-    build_library();
+fn main() -> Result<(), Box<dyn Error>> {
+    build_library()?;
 
     bindgen::builder()
         .header(format!("{LIB_GC_DIR}/include/gc.h"))
@@ -15,22 +16,21 @@ fn main() {
         .use_core()
         .allowlist_item("GC_.*")
         .default_macro_constant_type(bindgen::MacroTypeVariation::Signed)
-        .generate()
-        .unwrap()
-        .write_to_file(PathBuf::from(env::var("OUT_DIR").unwrap()).join("bindings.rs"))
-        .unwrap();
+        .generate()?
+        .write_to_file(PathBuf::from(env::var("OUT_DIR")?).join("bindings.rs"))?;
+
+    Ok(())
 }
 
 cfg_select! {
     feature = "cmake" => {
-        fn build_library() {
+        fn build_library() -> Result<(), Box<dyn Error>> {
             use cmake::Config;
             use std::path::Path;
 
             let libatomic_include_path = Path::new(LIB_ATOMIC_OPS_DIR)
                 .join("src")
-                .canonicalize()
-                .unwrap()
+                .canonicalize()?
                 .display()
                 .to_string()
                 .replace(r"\\?\", "");
@@ -46,16 +46,17 @@ cfg_select! {
                 dst.join("lib").display()
             );
             println!("cargo:rustc-link-lib=static=gc");
+
+            Ok(())
         }
     }
     feature = "autotools" => {
-        fn build_library() {
+        fn build_library() -> Result<(), Box<dyn Error>> {
             for dir in &[LIB_ATOMIC_OPS_DIR, LIB_GC_DIR] {
                 std::process::Command::new("sh")
                     .arg("-c")
                     .arg(format!("cd {dir} && ./autogen.sh"))
-                    .output()
-                    .unwrap();
+                    .output()?;
             }
 
             let dst = autotools::Config::new(LIB_ATOMIC_OPS_DIR)
@@ -86,9 +87,10 @@ cfg_select! {
                 std::process::Command::new("sh")
                     .arg("-c")
                     .arg(format!("cd {dir} && git clean -dfx"))
-                    .output()
-                    .unwrap();
+                    .output()?;
             }
+
+            Ok(())
         }
     }
 }
