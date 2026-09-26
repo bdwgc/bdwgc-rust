@@ -1,0 +1,11 @@
+name: setup
+description: Sets up a build environment
+inputs: {}
+outputs: {}
+runs:
+  using: composite
+  steps:
+    - uses: swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+    - uses: homebrew/actions/setup-homebrew@e99025eb970cfa124b8284a35463d87426917478 # main
+    - run: brew install autoconf automake libtool
+      shell: sh
