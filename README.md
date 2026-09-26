@@ -12,7 +12,31 @@ The raw bindings to the C API of [`bdwgc`][bdwgc] that this crate is built on ar
 
 ## Usage
 
-See [`examples`](https://github.com/bdwgc/bdwgc-rust/tree/main/examples) directory.
+```rust
+use bdwgc_alloc::Allocator;
+use std::thread::spawn;
+
+#[global_allocator]
+static GLOBAL_ALLOCATOR: Allocator = Allocator;
+
+fn main() {
+    unsafe { Allocator::initialize() }
+
+    // Unreachable objects are collected automatically.
+    Box::leak(Box::new([0u8; 256]));
+
+    // Threads other than a main thread must be registered to a collector before allocation.
+    spawn(|| {
+        unsafe { Allocator::register_current_thread() }.unwrap();
+
+        Box::leak(Box::new([0u8; 256]));
+
+        unsafe { Allocator::unregister_current_thread() }
+    })
+    .join()
+    .unwrap();
+}
+```
 
 By default [`bdwgc`][bdwgc] is built with autotools. To build with cmake, enable the `cmake` feature:
 

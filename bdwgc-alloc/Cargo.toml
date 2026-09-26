@@ -18,3 +18,7 @@ cmake = ["bdwgc-alloc-sys/cmake"]
 
 [lints]
 workspace = true
+
+[[test]]
+name = "allocator"
+harness = false
