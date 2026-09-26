@@ -12,6 +12,8 @@ use core::{
 };
 use std::thread::spawn;
 
+const TOTAL_COUNT: usize = 1 << 10;
+
 static FINALIZED_COUNT: AtomicUsize = AtomicUsize::new(0);
 
 fn main() {
@@ -40,7 +42,7 @@ fn finalize() {
         FINALIZED_COUNT.fetch_add(1, Ordering::Relaxed);
     }
 
-    for _ in 0..1000 {
+    for _ in 0..TOTAL_COUNT {
         unsafe {
             GC_register_finalizer(
                 GC_malloc(42),
@@ -55,7 +57,7 @@ fn finalize() {
     unsafe { GC_gcollect() };
 
     // TODO Is there any way to collect all?
-    assert!(FINALIZED_COUNT.load(Ordering::Relaxed) > 0);
+    assert!(FINALIZED_COUNT.load(Ordering::Relaxed) > TOTAL_COUNT / 2);
 }
 
 fn register_thread() {
