@@ -10,6 +10,7 @@
     "dealloc",
     "finalizer",
     "gcollect",
+    "gitsubmodule",
     "libatomic",
     "libc",
     "libclang",

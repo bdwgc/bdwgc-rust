@@ -3,6 +3,8 @@
 use core::error::Error;
 use std::{env, path::PathBuf};
 
+// cspell: ignore reconf
+
 const LIB_ATOMIC_OPS_DIR: &str = "vendor/libatomic_ops";
 const LIB_GC_DIR: &str = "vendor/bdwgc";
 
@@ -52,14 +54,8 @@ cfg_select! {
     }
     feature = "autotools" => {
         fn build_library() -> Result<(), Box<dyn Error>> {
-            for dir in &[LIB_ATOMIC_OPS_DIR, LIB_GC_DIR] {
-                std::process::Command::new("sh")
-                    .arg("-c")
-                    .arg(format!("cd {dir} && ./autogen.sh"))
-                    .output()?;
-            }
-
             let dst = autotools::Config::new(LIB_ATOMIC_OPS_DIR)
+                .reconf("-i")
                 .cflag("-fPIC")
                 .build();
 
@@ -70,6 +66,7 @@ cfg_select! {
             println!("cargo:rustc-link-lib=static=atomic_ops");
 
             let dst = autotools::Config::new(LIB_GC_DIR)
+                .reconf("-i")
                 .cflag(format!(
                     // spell-checker: disable-next-line
                     "-I{} -L/lib/x86_64-linux-gnu -lpthread -fPIC",
