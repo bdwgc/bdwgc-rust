@@ -9,7 +9,7 @@ license.workspace = true
 categories = ["api-bindings", "memory-management", "no-std", "no-std::no-alloc"]
 
 [dependencies]
-bdwgc-alloc-sys = { version = "0.6.15", path = "../bdwgc-alloc-sys", default-features = false }
+bdwgc-alloc-sys = { version = "0.6.16", path = "../bdwgc-alloc-sys", default-features = false }
 
 [features]
 default = ["autotools"]
