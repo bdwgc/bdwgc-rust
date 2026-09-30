@@ -3,7 +3,7 @@ resolver = "3"
 members = ["bdwgc-alloc", "bdwgc-alloc-sys"]
 
 [workspace.package]
-version = "0.6.15"
+version = "0.6.16"
 edition = "2024"
 repository = "https://github.com/bdwgc/bdwgc-rust"
 license = "MIT"
