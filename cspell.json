@@ -14,6 +14,7 @@
     "libatomic",
     "libc",
     "libclang",
+    "memalign",
     "realloc",
     "repr",
     "rustc",
