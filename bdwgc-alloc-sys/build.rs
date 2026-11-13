@@ -26,6 +26,10 @@ fn main() -> Result<(), Box<dyn Error>> {
 
 cfg_select! {
     feature = "cmake" => {
+        // The dependency is unused when both build systems are enabled.
+        #[cfg(feature = "autotools")]
+        use autotools as _;
+
         fn build_library() -> Result<(), Box<dyn Error>> {
             use cmake::Config;
             use std::path::Path;

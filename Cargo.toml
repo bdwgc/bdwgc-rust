@@ -8,6 +8,10 @@ edition = "2024"
 repository = "https://github.com/bdwgc/bdwgc-rust"
 license = "MIT"
 
+[workspace.lints.cargo]
+unused_dependencies = "deny"
+unused_workspace_dependencies = "deny"
+
 [workspace.lints.clippy]
 alloc_instead_of_core = "deny"
 dbg_macro = "deny"
