@@ -38,15 +38,16 @@ fn main() {
 }
 ```
 
-To allocate only some objects by the collector, pass the allocator to collections instead of making it the global one. Note that the collector does not scan memory of other allocators, so never keep the only pointers to such objects there.
+To allocate only some objects by the collector, pass `CollectableAllocator` to collections instead of making `Allocator` the global one. Note that the collector does not scan memory of other allocators, so never keep the only pointers to such objects there.
 
 ```rust
-use bdwgc_alloc::Allocator;
+use bdwgc_alloc::{Allocator, CollectableAllocator};
 
 fn main() {
     unsafe { Allocator::initialize() }
 
-    let mut numbers = Vec::new_in(Allocator);
+    // The vector is kept only on a stack of a main thread.
+    let mut numbers = Vec::new_in(unsafe { CollectableAllocator::new() });
 
     numbers.push(42);
 }
