@@ -7,7 +7,7 @@ Rust bindings to the C API of [`bdwgc`][bdwgc], the conservative garbage collect
 
 This crate builds [`bdwgc`][bdwgc] from its vendored source and links it statically. The bindings are generated from its headers at build time by [`bindgen`](https://github.com/rust-lang/rust-bindgen), which requires `libclang`.
 
-See the [`bdwgc-alloc`](https://crates.io/crates/bdwgc-alloc) crate for a [`GlobalAlloc`](https://doc.rust-lang.org/std/alloc/trait.GlobalAlloc.html) implementation on top of these bindings.
+See the [`bdwgc-alloc`](https://crates.io/crates/bdwgc-alloc) crate for [`GlobalAlloc`](https://doc.rust-lang.org/std/alloc/trait.GlobalAlloc.html) and [`Allocator`](https://doc.rust-lang.org/std/alloc/trait.Allocator.html) implementations on top of these bindings.
 
 ## Install
 

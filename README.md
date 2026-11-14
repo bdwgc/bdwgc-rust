@@ -4,7 +4,7 @@
 [![Crate](https://img.shields.io/crates/v/bdwgc-alloc.svg?style=flat-square)](https://crates.io/crates/bdwgc-alloc)
 [![License](https://img.shields.io/github/license/bdwgc/bdwgc-rust.svg?style=flat-square)](https://github.com/bdwgc/bdwgc-rust/blob/main/LICENSE)
 
-[`GlobalAlloc`](https://doc.rust-lang.org/std/alloc/trait.GlobalAlloc.html) implementation for [`bdwgc`][bdwgc], the conservative garbage collector.
+[`GlobalAlloc`](https://doc.rust-lang.org/std/alloc/trait.GlobalAlloc.html) and [`Allocator`](https://doc.rust-lang.org/std/alloc/trait.Allocator.html) implementations for [`bdwgc`][bdwgc], the conservative garbage collector.
 
 This crate is for use cases in which developers need to integrate [`bdwgc`][bdwgc] into their programs written in Rust (e.g. writing a runtime library in Rust for their own programming language whose GC is done by [`bdwgc`][bdwgc].)
 
@@ -35,6 +35,20 @@ fn main() {
     })
     .join()
     .unwrap();
+}
+```
+
+To allocate only some objects by the collector, pass the allocator to collections instead of making it the global one. Note that the collector does not scan memory of other allocators, so never keep the only pointers to such objects there.
+
+```rust
+use bdwgc_alloc::Allocator;
+
+fn main() {
+    unsafe { Allocator::initialize() }
+
+    let mut numbers = Vec::new_in(Allocator);
+
+    numbers.push(42);
 }
 ```
 
