@@ -14,12 +14,12 @@
     "libatomic",
     "libc",
     "libclang",
-    "memalign",
     "realloc",
     "repr",
     "rustc",
     "stackbottom",
     "swatinem",
+    "uncollectable",
     "unregisters"
   ]
 }

@@ -38,7 +38,7 @@ fn main() {
 }
 ```
 
-To allocate only some objects by the collector, pass the allocator to collections instead of making it the global one. Note that the collector does not scan memory of other allocators, so never keep the only pointers to such objects there.
+To keep pointers to objects of the collector in some collections without making the allocator the global one, pass it to the collections instead. The collector scans their memory but never collects it, so it is freed only when they are dropped.
 
 ```rust
 use bdwgc_alloc::Allocator;

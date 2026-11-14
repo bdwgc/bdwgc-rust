@@ -1,19 +1,13 @@
 //! A smoke test of the allocator API.
 
 use bdwgc_alloc::Allocator;
-use core::{
-    alloc::{AllocError, Allocator as _, Layout},
-    ffi::c_void,
-    ptr::null,
-    sync::atomic::{AtomicUsize, Ordering},
-};
+use core::alloc::{AllocError, Allocator as _, GlobalAlloc, Layout};
 
 const OBJECT_SIZE: usize = 1 << 8;
 const LARGE_OBJECT_SIZE: usize = 1 << 16;
 const MAX_ALIGNMENT_EXPONENT: u32 = 16;
 const TOTAL_COUNT: usize = 1 << 10;
-
-static FINALIZED_COUNT: AtomicUsize = AtomicUsize::new(0);
+const GARBAGE_COUNT: usize = 1 << 16;
 
 fn main() {
     unsafe { Allocator::initialize() }
@@ -26,7 +20,7 @@ fn main() {
     clone_box();
     grow_vector();
     shrink_vector();
-    free_by_gc();
+    keep_in_system_allocator();
 }
 
 fn allocate() {
@@ -104,26 +98,21 @@ fn shrink_vector() {
     assert_eq!(numbers, [42]);
 }
 
-fn free_by_gc() {
-    extern "C" fn count(_object: *mut c_void, _client_data: *mut c_void) {
-        FINALIZED_COUNT.fetch_add(1, Ordering::Relaxed);
-    }
-
-    for _ in 0..TOTAL_COUNT {
-        unsafe {
-            Allocator::register_finalizer(
-                Allocator
-                    .allocate(Layout::new::<[u8; OBJECT_SIZE]>())
-                    .unwrap()
-                    .as_ptr()
-                    .cast(),
-                count,
-                null(),
-            );
-        }
-    }
+fn keep_in_system_allocator() {
+    let numbers = (0..TOTAL_COUNT)
+        .map(|number| Box::new_in(number, Allocator))
+        .collect::<Vec<_>>();
 
     Allocator::force_collect();
 
-    assert!(FINALIZED_COUNT.load(Ordering::Relaxed) > TOTAL_COUNT / 2);
+    for _ in 0..GARBAGE_COUNT {
+        unsafe {
+            Allocator
+                .alloc(Layout::new::<usize>())
+                .cast::<usize>()
+                .write(usize::MAX);
+        }
+    }
+
+    assert!(numbers.iter().map(|number| **number).eq(0..TOTAL_COUNT));
 }

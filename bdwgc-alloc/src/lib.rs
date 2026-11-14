@@ -4,15 +4,19 @@
 mod error;
 
 use bdwgc_alloc_sys::{
-    GC_SUCCESS, GC_alloc_lock, GC_alloc_unlock, GC_allow_register_threads, GC_free, GC_gcollect,
-    GC_get_stack_base, GC_init, GC_malloc, GC_memalign, GC_realloc, GC_register_finalizer,
-    GC_register_my_thread, GC_set_stackbottom, GC_stack_base, GC_unregister_my_thread,
+    GC_SUCCESS, GC_alloc_lock, GC_alloc_unlock, GC_allow_register_threads, GC_base, GC_free,
+    GC_gcollect, GC_get_stack_base, GC_init, GC_malloc, GC_malloc_uncollectable, GC_realloc,
+    GC_register_finalizer, GC_register_my_thread, GC_set_stackbottom, GC_stack_base,
+    GC_unregister_my_thread,
 };
 use core::{
     alloc::{self, AllocError, GlobalAlloc, Layout},
     ffi::c_void,
     ptr::{NonNull, null_mut},
 };
+
+// A collector aligns memory blocks to granules of two pointers.
+const GRANULE_SIZE: usize = 2 * size_of::<*const c_void>();
 
 /// An allocator.
 #[derive(Clone, Copy)]
@@ -121,8 +125,16 @@ unsafe impl alloc::Allocator for Allocator {
             if layout.size() == 0 {
                 layout.dangling_ptr()
             } else {
-                NonNull::new(unsafe { GC_memalign(layout.align(), layout.size()) }.cast())
-                    .ok_or(AllocError)?
+                NonNull::new(
+                    unsafe {
+                        GC_malloc_uncollectable(
+                            layout.size() + layout.align().saturating_sub(GRANULE_SIZE),
+                        )
+                    }
+                    .cast::<u8>()
+                    .map_addr(|address| address.next_multiple_of(layout.align())),
+                )
+                .ok_or(AllocError)?
             },
             layout.size(),
         ))
@@ -130,7 +142,7 @@ unsafe impl alloc::Allocator for Allocator {
 
     unsafe fn deallocate(&self, ptr: NonNull<u8>, layout: Layout) {
         if layout.size() != 0 {
-            unsafe { GC_free(ptr.as_ptr().cast()) }
+            unsafe { GC_free(GC_base(ptr.as_ptr().cast())) }
         }
     }
 }
