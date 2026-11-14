@@ -5,16 +5,17 @@ mod error;
 
 use bdwgc_alloc_sys::{
     GC_SUCCESS, GC_alloc_lock, GC_alloc_unlock, GC_allow_register_threads, GC_free, GC_gcollect,
-    GC_get_stack_base, GC_init, GC_malloc, GC_realloc, GC_register_finalizer,
+    GC_get_stack_base, GC_init, GC_malloc, GC_memalign, GC_realloc, GC_register_finalizer,
     GC_register_my_thread, GC_set_stackbottom, GC_stack_base, GC_unregister_my_thread,
 };
 use core::{
-    alloc::{GlobalAlloc, Layout},
+    alloc::{self, AllocError, GlobalAlloc, Layout},
     ffi::c_void,
-    ptr::null_mut,
+    ptr::{NonNull, null_mut},
 };
 
 /// An allocator.
+#[derive(Clone, Copy)]
 pub struct Allocator;
 
 impl Allocator {
@@ -111,6 +112,26 @@ impl Allocator {
                 null_mut(),
             )
         };
+    }
+}
+
+unsafe impl alloc::Allocator for Allocator {
+    fn allocate(&self, layout: Layout) -> Result<NonNull<[u8]>, AllocError> {
+        Ok(NonNull::slice_from_raw_parts(
+            if layout.size() == 0 {
+                layout.dangling_ptr()
+            } else {
+                NonNull::new(unsafe { GC_memalign(layout.align(), layout.size()) }.cast())
+                    .ok_or(AllocError)?
+            },
+            layout.size(),
+        ))
+    }
+
+    unsafe fn deallocate(&self, ptr: NonNull<u8>, layout: Layout) {
+        if layout.size() != 0 {
+            unsafe { GC_free(ptr.as_ptr().cast()) }
+        }
     }
 }
 

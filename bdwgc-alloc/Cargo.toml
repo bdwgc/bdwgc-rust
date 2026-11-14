@@ -2,7 +2,7 @@
 name = "bdwgc-alloc"
 version.workspace = true
 edition.workspace = true
-description = "impl GlobalAlloc for bdwgc"
+description = "impl GlobalAlloc and Allocator for bdwgc"
 documentation = "https://bdwgc.github.io/bdwgc-rust/bdwgc_alloc/"
 repository.workspace = true
 license.workspace = true
@@ -21,4 +21,8 @@ workspace = true
 
 [[test]]
 name = "allocator"
+harness = false
+
+[[test]]
+name = "allocator_api"
 harness = false
