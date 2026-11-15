@@ -4,13 +4,12 @@
 mod collectable_allocator;
 mod error;
 
-pub use collectable_allocator::CollectableAllocator;
-
 use bdwgc_alloc_sys::{
     GC_SUCCESS, GC_alloc_lock, GC_alloc_unlock, GC_allow_register_threads, GC_free, GC_gcollect,
     GC_get_stack_base, GC_init, GC_malloc, GC_realloc, GC_register_finalizer,
     GC_register_my_thread, GC_set_stackbottom, GC_stack_base, GC_unregister_my_thread,
 };
+pub use collectable_allocator::CollectableAllocator;
 use core::{
     alloc::{GlobalAlloc, Layout},
     ffi::c_void,
