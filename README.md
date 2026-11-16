@@ -27,11 +27,9 @@ fn main() {
 
     // Threads other than a main thread must be registered to a collector before allocation.
     spawn(|| {
-        unsafe { Allocator::register_current_thread() }.unwrap();
+        let _registration = unsafe { Allocator::register_current_thread() }.unwrap();
 
         Box::leak(Box::new([0u8; 256]));
-
-        unsafe { Allocator::unregister_current_thread() }
     })
     .join()
     .unwrap();
