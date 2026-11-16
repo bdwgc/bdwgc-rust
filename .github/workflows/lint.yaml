@@ -13,6 +13,7 @@ jobs:
           submodules: true
       - uses: swatinem/rust-cache@v2.9.3
       - run: cargo clippy -- -D warnings
+      - run: cargo clippy --all-features -- -D warnings
   format:
     runs-on: ubuntu-latest
     steps:
