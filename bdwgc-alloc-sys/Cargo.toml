@@ -2,6 +2,7 @@
 name = "bdwgc-alloc-sys"
 version.workspace = true
 edition.workspace = true
+rust-version.workspace = true
 description = "Rust bindings to the bdwgc C API"
 documentation = "https://bdwgc.github.io/bdwgc-rust/bdwgc_alloc_sys/"
 repository.workspace = true

@@ -58,6 +58,8 @@ cfg_select! {
     }
     feature = "autotools" => {
         fn build_library() -> Result<(), Box<dyn Error>> {
+            use std::process::Command;
+
             let dst = autotools::Config::new(LIB_ATOMIC_OPS_DIR)
                 .reconf("-i")
                 .cflag("-fPIC")
@@ -73,7 +75,7 @@ cfg_select! {
                 .reconf("-i")
                 .cflag(format!(
                     // spell-checker: disable-next-line
-                    "-I{} -L/lib/x86_64-linux-gnu -lpthread -fPIC",
+                    "-I{} -lpthread -fPIC",
                     dst.join("include").display()
                 ))
                 .build();
@@ -84,10 +86,10 @@ cfg_select! {
             );
             println!("cargo:rustc-link-lib=static=gc");
 
-            for dir in &[LIB_ATOMIC_OPS_DIR, LIB_GC_DIR] {
-                std::process::Command::new("sh")
-                    .arg("-c")
-                    .arg(format!("cd {dir} && git clean -dfx"))
+            for dir in [LIB_ATOMIC_OPS_DIR, LIB_GC_DIR] {
+                Command::new("git")
+                    .args(["clean", "-dfx"])
+                    .current_dir(dir)
                     .output()?;
             }
 
