@@ -22,14 +22,14 @@ dependencies = [
 
 [[package]]
 name = "bdwgc-alloc"
-version = "0.6.16"
+version = "0.7.0"
 dependencies = [
  "bdwgc-alloc-sys",
 ]
 
 [[package]]
 name = "bdwgc-alloc-sys"
-version = "0.6.16"
+version = "0.7.0"
 dependencies = [
  "autotools",
  "bindgen",

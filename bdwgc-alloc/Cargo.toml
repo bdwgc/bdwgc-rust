@@ -23,7 +23,7 @@ harness = false
 name = "allocator_api"
 
 [dependencies]
-bdwgc-alloc-sys = { path = "../bdwgc-alloc-sys", version = "0.6.16", default-features = false }
+bdwgc-alloc-sys = { path = "../bdwgc-alloc-sys", version = "0.7.0", default-features = false }
 
 [lints]
 workspace = true
