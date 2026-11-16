@@ -9,7 +9,7 @@ const TOTAL_COUNT: usize = 1 << 16;
 const THREAD_COUNT: usize = 1 << 6;
 
 #[global_allocator]
-static GLOBAL_ALLOCATOR: Allocator = Allocator;
+static GLOBAL_ALLOCATOR: Allocator = unsafe { Allocator::new() };
 
 fn main() {
     unsafe { Allocator::initialize() }

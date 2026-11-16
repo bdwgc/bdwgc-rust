@@ -17,7 +17,7 @@ use bdwgc_alloc::Allocator;
 use std::thread::spawn;
 
 #[global_allocator]
-static GLOBAL_ALLOCATOR: Allocator = Allocator;
+static GLOBAL_ALLOCATOR: Allocator = unsafe { Allocator::new() };
 
 fn main() {
     unsafe { Allocator::initialize() }
@@ -46,7 +46,8 @@ use bdwgc_alloc::Allocator;
 fn main() {
     unsafe { Allocator::initialize() }
 
-    let mut numbers = Vec::new_in(Allocator);
+    // The vector is kept only on a stack of a main thread.
+    let mut numbers = Vec::new_in(unsafe { Allocator::new() });
 
     numbers.push(42);
 }
