@@ -8,21 +8,21 @@ repository.workspace = true
 license.workspace = true
 categories = ["api-bindings", "memory-management", "no-std", "no-std::no-alloc"]
 
-[dependencies]
-bdwgc-alloc-sys = { version = "0.6.16", path = "../bdwgc-alloc-sys", default-features = false }
-
 [features]
 default = ["autotools"]
 autotools = ["bdwgc-alloc-sys/autotools"]
 cmake = ["bdwgc-alloc-sys/cmake"]
 
+[[test]]
+harness = false
+name = "allocator"
+
+[[test]]
+harness = false
+name = "allocator_api"
+
+[dependencies]
+bdwgc-alloc-sys = { path = "../bdwgc-alloc-sys", version = "0.6.16", default-features = false }
+
 [lints]
 workspace = true
-
-[[test]]
-name = "allocator"
-harness = false
-
-[[test]]
-name = "allocator_api"
-harness = false

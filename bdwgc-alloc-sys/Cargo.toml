@@ -9,17 +9,17 @@ license.workspace = true
 categories = ["external-ffi-bindings", "memory-management", "no-std", "no-std::no-alloc"]
 links = "gc"
 
+[features]
+default = ["autotools"]
+
+[[test]]
+harness = false
+name = "collector"
+
 [build-dependencies]
 autotools = { version = "0.2.7", optional = true }
 bindgen = "0.73.2"
 cmake = { version = "0.1.58", optional = true }
 
-[features]
-default = ["autotools"]
-
 [lints]
 workspace = true
-
-[[test]]
-name = "collector"
-harness = false
