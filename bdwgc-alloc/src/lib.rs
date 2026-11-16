@@ -11,6 +11,7 @@ use bdwgc_alloc_sys::{
 use core::{
     alloc::{self, AllocError, GlobalAlloc, Layout},
     ffi::c_void,
+    marker::PhantomData,
     ptr::{NonNull, copy_nonoverlapping, null_mut},
 };
 
@@ -59,8 +60,10 @@ impl Allocator {
     ///
     /// # Safety
     ///
-    /// This function must not be called in a main thread.
-    pub unsafe fn register_current_thread() -> Result<(), error::Error> {
+    /// A collector must be initialized already, and a pointer into it held by
+    /// the thread must be handed off to another thread before the registration
+    /// is dropped.
+    pub unsafe fn register_current_thread() -> Result<ThreadRegistration, error::Error> {
         let mut base = GC_stack_base {
             mem_base: null_mut(),
         };
@@ -71,7 +74,7 @@ impl Allocator {
             return Err(error::Error::new("failed to register a thread for GC"));
         }
 
-        Ok(())
+        Ok(ThreadRegistration(PhantomData))
     }
 
     /// Sets a bottom of a stack.
@@ -91,15 +94,6 @@ impl Allocator {
                 },
             )
         }
-    }
-
-    /// Unregisters a current thread from a collector.
-    ///
-    /// # Safety
-    ///
-    /// The thread must be registered already.
-    pub unsafe fn unregister_current_thread() {
-        unsafe { GC_unregister_my_thread() };
     }
 
     /// Runs a garbage collection forcibly.
@@ -126,6 +120,18 @@ impl Allocator {
                 null_mut(),
             )
         };
+    }
+}
+
+/// A registration of a current thread to a collector.
+///
+/// The thread is removed from a collector when this value is dropped.
+#[must_use]
+pub struct ThreadRegistration(PhantomData<*mut ()>);
+
+impl Drop for ThreadRegistration {
+    fn drop(&mut self) {
+        unsafe { GC_unregister_my_thread() };
     }
 }
 

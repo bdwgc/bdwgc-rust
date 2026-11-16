@@ -30,6 +30,7 @@ fn main() {
     reallocate_aligned(Aligned128);
     static_thread();
     dynamic_threads();
+    panicking_thread();
 }
 
 fn free_by_gc() {
@@ -83,11 +84,24 @@ fn dynamic_threads() {
     }
 }
 
+fn panicking_thread() {
+    // A registration removes its thread from a collector even on a panic.
+    assert!(
+        spawn(|| {
+            let _registration = unsafe { Allocator::register_current_thread() }.unwrap();
+            panic!("a panic in a registered thread");
+        })
+        .join()
+        .is_err()
+    );
+
+    Allocator::force_collect();
+}
+
 fn spawn_thread(allocate: fn()) {
     spawn(move || {
-        unsafe { Allocator::register_current_thread() }.unwrap();
+        let _registration = unsafe { Allocator::register_current_thread() }.unwrap();
         allocate();
-        unsafe { Allocator::unregister_current_thread() }
     })
     .join()
     .unwrap();

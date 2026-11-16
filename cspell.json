@@ -9,6 +9,7 @@
     "clippy",
     "dealloc",
     "finalizer",
+    "finalizers",
     "gcollect",
     "gitsubmodule",
     "libatomic",
