@@ -5,14 +5,17 @@ mod error;
 
 use bdwgc_alloc_sys::{
     GC_SUCCESS, GC_alloc_lock, GC_alloc_unlock, GC_allow_register_threads, GC_free, GC_gcollect,
-    GC_get_stack_base, GC_init, GC_malloc, GC_memalign, GC_realloc, GC_register_finalizer,
+    GC_get_stack_base, GC_init, GC_memalign, GC_realloc, GC_register_finalizer,
     GC_register_my_thread, GC_set_stackbottom, GC_stack_base, GC_unregister_my_thread,
 };
 use core::{
     alloc::{self, AllocError, GlobalAlloc, Layout},
     ffi::c_void,
-    ptr::{NonNull, null_mut},
+    ptr::{NonNull, copy_nonoverlapping, null_mut},
 };
+
+// A collector aligns memory blocks to granules of two pointers.
+const GRANULE_SIZE: usize = 2 * size_of::<*const c_void>();
 
 /// An allocator.
 #[derive(Clone, Copy)]
@@ -148,14 +151,28 @@ unsafe impl alloc::Allocator for Allocator {
 
 unsafe impl GlobalAlloc for Allocator {
     unsafe fn alloc(&self, layout: Layout) -> *mut u8 {
-        (unsafe { GC_malloc(layout.size()) }) as *mut u8
+        (unsafe { GC_memalign(layout.align(), layout.size()) }) as *mut u8
     }
 
     unsafe fn dealloc(&self, ptr: *mut u8, _layout: Layout) {
         unsafe { GC_free(ptr as *mut c_void) }
     }
 
-    unsafe fn realloc(&self, ptr: *mut u8, _layout: Layout, size: usize) -> *mut u8 {
-        (unsafe { GC_realloc(ptr as *mut c_void, size) }) as *mut u8
+    unsafe fn realloc(&self, ptr: *mut u8, layout: Layout, size: usize) -> *mut u8 {
+        if layout.align() <= GRANULE_SIZE {
+            return (unsafe { GC_realloc(ptr as *mut c_void, size) }) as *mut u8;
+        }
+
+        let new_ptr =
+            unsafe { self.alloc(Layout::from_size_align_unchecked(size, layout.align())) };
+
+        if !new_ptr.is_null() {
+            unsafe {
+                copy_nonoverlapping(ptr, new_ptr, layout.size().min(size));
+                self.dealloc(ptr, layout);
+            }
+        }
+
+        new_ptr
     }
 }
