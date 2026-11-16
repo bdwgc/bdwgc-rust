@@ -58,9 +58,6 @@ impl Allocator {
 
     /// Registers a current thread to a collector.
     ///
-    /// The thread is removed from a collector when the returned registration is
-    /// dropped.
-    ///
     /// # Safety
     ///
     /// A collector must be initialized already, and a pointer into it held by
