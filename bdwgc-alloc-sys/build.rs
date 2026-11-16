@@ -29,11 +29,10 @@ cfg_select! {
         // The dependency is unused when both build systems are enabled.
         #[cfg(feature = "autotools")]
         use autotools as _;
+        use cmake::Config;
+        use std::path::Path;
 
         fn build_library() -> Result<(), Box<dyn Error>> {
-            use cmake::Config;
-            use std::path::Path;
-
             let libatomic_include_path = Path::new(LIB_ATOMIC_OPS_DIR)
                 .join("src")
                 .canonicalize()?
@@ -57,9 +56,9 @@ cfg_select! {
         }
     }
     feature = "autotools" => {
-        fn build_library() -> Result<(), Box<dyn Error>> {
-            use std::process::Command;
+        use std::process::Command;
 
+        fn build_library() -> Result<(), Box<dyn Error>> {
             let dst = autotools::Config::new(LIB_ATOMIC_OPS_DIR)
                 .reconf("-i")
                 .cflag("-fPIC")
