@@ -15,6 +15,7 @@
     "libc",
     "libclang",
     "memalign",
+    "nonoverlapping",
     "realloc",
     "repr",
     "rustc",
