@@ -85,9 +85,7 @@ fn dynamic_threads() {
 }
 
 fn panicking_thread() {
-    // A panic unwinds through the registration, which removes the thread from a
-    // collector, so a later collection does not stop a thread that no longer
-    // exists.
+    // A registration removes its thread from a collector even on a panic.
     assert!(
         spawn(|| {
             let _registration = unsafe { Allocator::register_current_thread() }.unwrap();

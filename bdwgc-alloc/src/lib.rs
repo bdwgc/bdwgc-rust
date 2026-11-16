@@ -58,16 +58,14 @@ impl Allocator {
 
     /// Registers a current thread to a collector.
     ///
-    /// The thread stays registered until the returned registration is dropped.
-    /// Keep it alive as long as the thread allocates memory or holds pointers
-    /// into a collector heap.
+    /// The thread is removed from a collector when the returned registration is
+    /// dropped.
     ///
     /// # Safety
     ///
-    /// A collector must be initialized already, and this function must be called
-    /// outside collector callbacks such as finalizers. Any pointer into a
-    /// collector heap owned by the thread must be handed off to another
-    /// registered thread before the registration is dropped.
+    /// A collector must be initialized already, and a pointer into it held by
+    /// the thread must be handed off to another thread before the registration
+    /// is dropped.
     pub unsafe fn register_current_thread() -> Result<ThreadRegistration, error::Error> {
         let mut base = GC_stack_base {
             mem_base: null_mut(),
@@ -130,8 +128,7 @@ impl Allocator {
 
 /// A registration of a current thread to a collector.
 ///
-/// The thread is removed from a collector when this value is dropped. It is
-/// bound to the thread that created it and cannot be sent across threads.
+/// The thread is removed from a collector when this value is dropped.
 #[must_use]
 pub struct ThreadRegistration(PhantomData<*mut ()>);
 
