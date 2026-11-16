@@ -29,11 +29,10 @@ cfg_select! {
         // The dependency is unused when both build systems are enabled.
         #[cfg(feature = "autotools")]
         use autotools as _;
+        use cmake::Config;
+        use std::path::Path;
 
         fn build_library() -> Result<(), Box<dyn Error>> {
-            use cmake::Config;
-            use std::path::Path;
-
             let libatomic_include_path = Path::new(LIB_ATOMIC_OPS_DIR)
                 .join("src")
                 .canonicalize()?
@@ -41,7 +40,7 @@ cfg_select! {
                 .to_string()
                 .replace(r"\\?\", "");
 
-            let dst = Config::new(LIB_GC_DIR)
+            let build_directory = Config::new(LIB_GC_DIR)
                 .profile("Release")
                 .define("GC_BUILD_SHARED_LIBS", "FALSE")
                 .cflag(format!("-I{}", libatomic_include_path))
@@ -49,7 +48,7 @@ cfg_select! {
 
             println!(
                 "cargo:rustc-link-search=native={}",
-                dst.join("lib").display()
+                build_directory.join("lib").display()
             );
             println!("cargo:rustc-link-lib=static=gc");
 
@@ -57,6 +56,8 @@ cfg_select! {
         }
     }
     feature = "autotools" => {
+        use std::process::Command;
+
         fn build_library() -> Result<(), Box<dyn Error>> {
             let dst = autotools::Config::new(LIB_ATOMIC_OPS_DIR)
                 .reconf("-i")
@@ -73,7 +74,7 @@ cfg_select! {
                 .reconf("-i")
                 .cflag(format!(
                     // spell-checker: disable-next-line
-                    "-I{} -L/lib/x86_64-linux-gnu -lpthread -fPIC",
+                    "-I{} -lpthread -fPIC",
                     dst.join("include").display()
                 ))
                 .build();
@@ -84,10 +85,10 @@ cfg_select! {
             );
             println!("cargo:rustc-link-lib=static=gc");
 
-            for dir in &[LIB_ATOMIC_OPS_DIR, LIB_GC_DIR] {
-                std::process::Command::new("sh")
-                    .arg("-c")
-                    .arg(format!("cd {dir} && git clean -dfx"))
+            for directory in [LIB_ATOMIC_OPS_DIR, LIB_GC_DIR] {
+                Command::new("git")
+                    .args(["clean", "-dfx"])
+                    .current_dir(directory)
                     .output()?;
             }
 
