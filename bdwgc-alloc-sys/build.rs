@@ -41,7 +41,7 @@ cfg_select! {
                 .to_string()
                 .replace(r"\\?\", "");
 
-            let dst = Config::new(LIB_GC_DIR)
+            let build_directory = Config::new(LIB_GC_DIR)
                 .profile("Release")
                 .define("GC_BUILD_SHARED_LIBS", "FALSE")
                 .cflag(format!("-I{}", libatomic_include_path))
@@ -49,7 +49,7 @@ cfg_select! {
 
             println!(
                 "cargo:rustc-link-search=native={}",
-                dst.join("lib").display()
+                build_directory.join("lib").display()
             );
             println!("cargo:rustc-link-lib=static=gc");
 
@@ -86,10 +86,10 @@ cfg_select! {
             );
             println!("cargo:rustc-link-lib=static=gc");
 
-            for dir in [LIB_ATOMIC_OPS_DIR, LIB_GC_DIR] {
+            for directory in [LIB_ATOMIC_OPS_DIR, LIB_GC_DIR] {
                 Command::new("git")
                     .args(["clean", "-dfx"])
-                    .current_dir(dir)
+                    .current_dir(directory)
                     .output()?;
             }
 
