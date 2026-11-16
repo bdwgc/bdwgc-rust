@@ -16,9 +16,20 @@ use core::{
 
 /// An allocator.
 #[derive(Clone, Copy)]
-pub struct Allocator;
+pub struct Allocator(());
 
 impl Allocator {
+    /// Creates an allocator.
+    ///
+    /// # Safety
+    ///
+    /// The allocator must be used only in a main thread or threads registered
+    /// to a collector, and its memory blocks must not be referenced only from
+    /// memory the collector does not scan, such as memory of other allocators.
+    pub const unsafe fn new() -> Self {
+        Self(())
+    }
+
     /// Locks a collector.
     pub fn lock() {
         unsafe { GC_alloc_lock() }
