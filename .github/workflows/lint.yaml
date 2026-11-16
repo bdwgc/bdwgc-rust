@@ -11,6 +11,8 @@ jobs:
       matrix:
         options:
           -
+          - --no-default-features --features autotools
+          - --no-default-features --features cmake
           - --all-features
     runs-on: ubuntu-latest
     steps:
